@@ -1,4 +1,4 @@
- Cadastro de Receitas Culinárias
+ Cadastro de Receitas Culinárias:
 
 Projeto Fullstack desenvolvido para gerenciamento de receitas culinárias.
 
