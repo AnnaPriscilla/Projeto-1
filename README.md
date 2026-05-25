@@ -4,7 +4,6 @@ Projeto Fullstack desenvolvido para gerenciamento de receitas culinárias.
 
 O sistema permitirá cadastrar, visualizar, editar e remover receitas, além de organizar receitas por categorias e ingredientes.
 
-
 Objetivo do Projeto
 
 Criar uma aplicação fullstack para praticar:
