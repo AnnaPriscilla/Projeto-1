@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 
 import usuariosRouter from './routes/usuarios.js';
 import receitasRouter from './routes/receitas.js';
@@ -10,6 +11,8 @@ import { logger } from './middleware/logger.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 
