@@ -1,11 +1,10 @@
- Cadastro de Receitas Culinárias
+ Cadastro de Receitas Culinárias:
 
 Projeto Fullstack desenvolvido para gerenciamento de receitas culinárias.
 
 O sistema permitirá cadastrar, visualizar, editar e remover receitas, além de organizar receitas por categorias e ingredientes.
 
-
-Objetivo do Projeto
+Objetivo do Projeto:
 
 Criar uma aplicação fullstack para praticar:
 
@@ -18,7 +17,7 @@ Criar uma aplicação fullstack para praticar:
 - Relacionamentos entre entidades
 
 
-Funcionalidades
+Funcionalidades:
 
 - ✅ Cadastro de receitas
 - ✅ Listagem de receitas
@@ -32,7 +31,7 @@ Funcionalidades
 
 
 
-Tecnologias Utilizadas
+Tecnologias Utilizadas:
 
  Frontend
 - HTML
@@ -53,7 +52,7 @@ Tecnologias Utilizadas
 - VS Code
 
 
- Estrutura Inicial do Projeto
+ Estrutura Inicial do Projeto:
 
 ```txt
 cadastro-receitas-culinarias/
