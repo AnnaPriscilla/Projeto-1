@@ -1,52 +1,75 @@
-let receitas = [];
-let nextId = 1;
+import { db } from '../db.js';
 
 export const receitaModel = {
 
     listarTodas() {
-        return receitas;
+
+        return db
+            .prepare(
+                'SELECT * FROM receitas'
+            )
+            .all();
     },
 
     buscarPorId(id) {
-        return receitas.find(r => r.id === id) || null;
+
+        return db
+            .prepare(
+                'SELECT * FROM receitas WHERE id = ?'
+            )
+            .get(id) || null;
     },
 
     inserir(dados) {
 
-        const receita = {
-            id: nextId++,
-            ...dados
-        };
+        const r =
+            db.prepare(`
+                INSERT INTO receitas
+                (nome)
+                VALUES (?)
+            `)
+            .run(dados.nome);
 
-        receitas.push(receita);
-
-        return receita;
+        return this.buscarPorId(
+            r.lastInsertRowid
+        );
     },
 
     atualizar(id, dados) {
 
-        const indice =
-            receitas.findIndex(r => r.id === id);
+        const atual =
+            this.buscarPorId(id);
 
-        if (indice === -1) return null;
+        if (!atual)
+            return null;
 
-        receitas[indice] = {
-            ...receitas[indice],
-            ...dados,
-            id
+        const novo = {
+            ...atual,
+            ...dados
         };
 
-        return receitas[indice];
+        db.prepare(`
+            UPDATE receitas
+            SET nome = ?
+            WHERE id = ?
+        `)
+        .run(
+            novo.nome,
+            id
+        );
+
+        return this.buscarPorId(id);
     },
 
     remover(id) {
 
-        const tamanho =
-            receitas.length;
+        const r =
+            db.prepare(`
+                DELETE FROM receitas
+                WHERE id = ?
+            `)
+            .run(id);
 
-        receitas =
-            receitas.filter(r => r.id !== id);
-
-        return receitas.length < tamanho;
+        return r.changes > 0;
     }
 };
