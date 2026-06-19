@@ -4,6 +4,15 @@ import { receitaController }
 from '../controllers/receitaController.js';
 
 const router = Router();
+/**
+ * @swagger
+ * /receitas:
+ *   get:
+ *     summary: Lista todas as receitas
+ *     responses:
+ *       200:
+ *         description: Lista de receitas
+ */
 
 router.get(
     '/',

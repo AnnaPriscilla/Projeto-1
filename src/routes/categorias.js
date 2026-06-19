@@ -4,6 +4,15 @@ import { categoriaController }
 from '../controllers/categoriaController.js';
 
 const router = Router();
+/**
+ * @swagger
+ * /categorias:
+ *   get:
+ *     summary: Lista todas as categorias
+ *     responses:
+ *       200:
+ *         description: Lista de categorias
+ */
 
 router.get(
     '/',

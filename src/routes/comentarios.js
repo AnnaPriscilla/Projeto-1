@@ -2,6 +2,15 @@ import { Router } from 'express';
 import { comentarioController } from '../controllers/comentarioController.js';
 
 const router = Router();
+/**
+ * @swagger
+ * /comentarios:
+ *   get:
+ *     summary: Lista todos os comentários
+ *     responses:
+ *       200:
+ *         description: Lista de comentários
+ */
 
 router.get('/', comentarioController.listarTodos);
 
