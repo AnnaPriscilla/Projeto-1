@@ -7,21 +7,34 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
+# Dependências
+node_modules/
+
+# Build
 dist
 dist-ssr
-*.local
-.env
 
-# Editor directories and files
+# Ambiente
+.env
+*.local
+
+# Banco SQLite
+receitas.db
+
+# VS Code
 .vscode/*
 !.vscode/extensions.json
+
+# IDEs
 .idea
+
+# Sistema Operacional
 .DS_Store
+Thumbs.db
+
+# Arquivos do Visual Studio
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-node_modules/
-receitas.db
