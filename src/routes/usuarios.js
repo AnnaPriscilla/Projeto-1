@@ -3,6 +3,16 @@ import { usuarioController } from '../controllers/usuarioController.js';
 
 const router = Router();
 
+/**
+ * @swagger
+ * /usuarios:
+ *   get:
+ *     summary: Lista todos os usuários
+ *     responses:
+ *       200:
+ *         description: Lista de usuários
+ */
+
 router.get('/', usuarioController.listarTodos);
 
 router.get('/:id',
