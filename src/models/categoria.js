@@ -1,52 +1,75 @@
-let categorias = [];
-
-let nextId = 1;
+import { db } from '../db.js';
 
 export const categoriaModel = {
 
     listarTodas() {
-        return categorias;
+
+        return db
+            .prepare(
+                'SELECT * FROM categorias'
+            )
+            .all();
     },
 
     buscarPorId(id) {
-        return categorias.find(c => c.id === id) || null;
+
+        return db
+            .prepare(
+                'SELECT * FROM categorias WHERE id = ?'
+            )
+            .get(id) || null;
     },
 
     inserir({ nome }) {
 
-        const categoria = {
-            id: nextId++,
-            nome
-        };
+        const r =
+            db.prepare(`
+                INSERT INTO categorias
+                (nome)
+                VALUES (?)
+            `)
+            .run(nome);
 
-        categorias.push(categoria);
-
-        return categoria;
+        return this.buscarPorId(
+            r.lastInsertRowid
+        );
     },
 
     atualizar(id, dados) {
 
-        const indice =
-            categorias.findIndex(c => c.id === id);
+        const atual =
+            this.buscarPorId(id);
 
-        if (indice === -1) return null;
+        if (!atual)
+            return null;
 
-        categorias[indice] = {
-            ...categorias[indice],
-            ...dados,
-            id
+        const novo = {
+            ...atual,
+            ...dados
         };
 
-        return categorias[indice];
+        db.prepare(`
+            UPDATE categorias
+            SET nome = ?
+            WHERE id = ?
+        `)
+        .run(
+            novo.nome,
+            id
+        );
+
+        return this.buscarPorId(id);
     },
 
     remover(id) {
 
-        const tamanho = categorias.length;
+        const r =
+            db.prepare(`
+                DELETE FROM categorias
+                WHERE id = ?
+            `)
+            .run(id);
 
-        categorias =
-            categorias.filter(c => c.id !== id);
-
-        return categorias.length < tamanho;
+        return r.changes > 0;
     }
 };

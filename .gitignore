@@ -1,0 +1,40 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependências
+node_modules/
+
+# Build
+dist
+dist-ssr
+
+# Ambiente
+.env
+*.local
+
+# Banco SQLite
+receitas.db
+
+# VS Code
+.vscode/*
+!.vscode/extensions.json
+
+# IDEs
+.idea
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos do Visual Studio
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

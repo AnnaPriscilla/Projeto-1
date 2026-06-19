@@ -1,55 +1,84 @@
-let comentarios = [];
-
-let nextId = 1;
+import { db } from '../db.js';
 
 export const comentarioModel = {
 
     listarTodos() {
-        return comentarios;
+        return db.prepare(
+            'SELECT * FROM comentarios'
+        ).all();
     },
 
     buscarPorId(id) {
-        return comentarios.find(c => c.id === id) || null;
+        return db.prepare(
+            'SELECT * FROM comentarios WHERE id = ?'
+        ).get(id) || null;
     },
 
-    inserir({ texto, usuarioId, receitaId }) {
+    inserir({
+        texto,
+        usuarioId,
+        receitaId
+    }) {
 
-        const comentario = {
-            id: nextId++,
-            texto,
-            usuarioId,
-            receitaId
-        };
+        const r =
+            db.prepare(`
+                INSERT INTO comentarios
+                (
+                    texto,
+                    usuarioId,
+                    receitaId
+                )
+                VALUES (?, ?, ?)
+            `)
+            .run(
+                texto,
+                usuarioId,
+                receitaId
+            );
 
-        comentarios.push(comentario);
-
-        return comentario;
+        return this.buscarPorId(
+            r.lastInsertRowid
+        );
     },
 
     atualizar(id, dados) {
 
-        const indice =
-            comentarios.findIndex(c => c.id === id);
+        const atual =
+            this.buscarPorId(id);
 
-        if (indice === -1) return null;
+        if (!atual)
+            return null;
 
-        comentarios[indice] = {
-            ...comentarios[indice],
-            ...dados,
-            id
+        const novo = {
+            ...atual,
+            ...dados
         };
 
-        return comentarios[indice];
+        db.prepare(`
+            UPDATE comentarios
+            SET texto = ?,
+                usuarioId = ?,
+                receitaId = ?
+            WHERE id = ?
+        `)
+        .run(
+            novo.texto,
+            novo.usuarioId,
+            novo.receitaId,
+            id
+        );
+
+        return this.buscarPorId(id);
     },
 
     remover(id) {
 
-        const tamanho =
-            comentarios.length;
+        const r =
+            db.prepare(
+                'DELETE FROM comentarios WHERE id = ?'
+            )
+            .run(id);
 
-        comentarios =
-            comentarios.filter(c => c.id !== id);
-
-        return comentarios.length < tamanho;
+        return r.changes > 0;
     }
 };

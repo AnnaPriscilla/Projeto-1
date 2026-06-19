@@ -1,54 +1,73 @@
-let ingredientes = [];
-
-let nextId = 1;
+import { db } from '../db.js';
 
 export const ingredienteModel = {
 
     listarTodos() {
-        return ingredientes;
+        return db.prepare(
+            'SELECT * FROM ingredientes'
+        ).all();
     },
 
     buscarPorId(id) {
-        return ingredientes.find(i => i.id === id) || null;
+        return db.prepare(
+            'SELECT * FROM ingredientes WHERE id = ?'
+        ).get(id) || null;
     },
 
     inserir({ nome, quantidade }) {
 
-        const ingrediente = {
-            id: nextId++,
-            nome,
-            quantidade
-        };
+        const r =
+            db.prepare(`
+                INSERT INTO ingredientes
+                (nome, quantidade)
+                VALUES (?, ?)
+            `)
+            .run(
+                nome,
+                quantidade
+            );
 
-        ingredientes.push(ingrediente);
-
-        return ingrediente;
+        return this.buscarPorId(
+            r.lastInsertRowid
+        );
     },
 
     atualizar(id, dados) {
 
-        const indice =
-            ingredientes.findIndex(i => i.id === id);
+        const atual =
+            this.buscarPorId(id);
 
-        if (indice === -1) return null;
+        if (!atual)
+            return null;
 
-        ingredientes[indice] = {
-            ...ingredientes[indice],
-            ...dados,
-            id
+        const novo = {
+            ...atual,
+            ...dados
         };
 
-        return ingredientes[indice];
+        db.prepare(`
+            UPDATE ingredientes
+            SET nome = ?,
+                quantidade = ?
+            WHERE id = ?
+        `)
+        .run(
+            novo.nome,
+            novo.quantidade,
+            id
+        );
+
+        return this.buscarPorId(id);
     },
 
     remover(id) {
 
-        const tamanho =
-            ingredientes.length;
+        const r =
+            db.prepare(
+                'DELETE FROM ingredientes WHERE id = ?'
+            )
+            .run(id);
 
-        ingredientes =
-            ingredientes.filter(i => i.id !== id);
-
-        return ingredientes.length < tamanho;
+        return r.changes > 0;
     }
 };

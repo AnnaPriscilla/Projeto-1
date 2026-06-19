@@ -1,54 +1,78 @@
-let usuarios = [];
-let nextId = 1;
+import { db } from '../db.js';
 
 export const usuarioModel = {
 
     listarTodos() {
-        return usuarios;
+        return db
+            .prepare(
+                'SELECT * FROM usuarios'
+            )
+            .all();
     },
 
     buscarPorId(id) {
-        return usuarios.find(u => u.id === id) || null;
+
+        return db
+            .prepare(
+                'SELECT * FROM usuarios WHERE id = ?'
+            )
+            .get(id) || null;
     },
 
     inserir({ nome, email, senha }) {
 
-        const novo = {
-            id: nextId++,
-            nome,
-            email,
-            senha
-        };
+        const r =
+            db.prepare(`
+                INSERT INTO usuarios
+                (nome, email, senha)
+                VALUES (?, ?, ?)
+            `)
+            .run(nome, email, senha);
 
-        usuarios.push(novo);
-
-        return novo;
+        return this.buscarPorId(
+            r.lastInsertRowid
+        );
     },
 
     atualizar(id, dados) {
 
-        const indice =
-            usuarios.findIndex(u => u.id === id);
+        const atual =
+            this.buscarPorId(id);
 
-        if (indice === -1) return null;
+        if (!atual)
+            return null;
 
-        usuarios[indice] = {
-            ...usuarios[indice],
-            ...dados,
-            id
+        const novo = {
+            ...atual,
+            ...dados
         };
 
-        return usuarios[indice];
+        db.prepare(`
+            UPDATE usuarios
+            SET nome = ?,
+                email = ?,
+                senha = ?
+            WHERE id = ?
+        `)
+        .run(
+            novo.nome,
+            novo.email,
+            novo.senha,
+            id
+        );
+
+        return this.buscarPorId(id);
     },
 
     remover(id) {
 
-        const tamanho =
-            usuarios.length;
+        const r =
+            db.prepare(`
+                DELETE FROM usuarios
+                WHERE id = ?
+            `)
+            .run(id);
 
-        usuarios =
-            usuarios.filter(u => u.id !== id);
-
-        return usuarios.length < tamanho;
+        return r.changes > 0;
     }
 };
